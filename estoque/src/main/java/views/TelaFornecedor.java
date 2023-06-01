@@ -1,6 +1,8 @@
 
 package views;
 
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import model.bean.Fornecedor;
 import model.dao.FornecedorDAO;
 
@@ -15,6 +17,29 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
      */
     public TelaFornecedor() {
         initComponents();
+        preencherTabela();
+    }
+    
+    public void limpar(){
+        txtCnpj.setText("");
+        txtEmail.setText("");
+        txtRazaoSocial.setText("");
+        txtTelefone.setText("");
+    }
+    
+    public void preencherTabela(){
+        DefaultTableModel dtm = (DefaultTableModel) tblCadastrados.getModel();
+        FornecedorDAO dao = new FornecedorDAO();
+        dtm.setRowCount(0);
+        for(Fornecedor f : dao.read()){
+            dtm.addRow(new Object[]{
+            f.getId(),
+            f.getCnpj(),
+            f.getRazaoSocial(),
+            f.getEmail(),
+            f.getTelefone()
+            });
+        }
     }
 
     /**
@@ -40,7 +65,7 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
         btnEditar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblCadastrados = new javax.swing.JTable();
 
         setClosable(true);
         setIconifiable(true);
@@ -58,6 +83,11 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
         jLabel4.setText("Telefone");
 
         btnLimpar.setText("Limpar");
+        btnLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimparActionPerformed(evt);
+            }
+        });
 
         btnCadastrar.setText("Cadastrar");
         btnCadastrar.addActionListener(new java.awt.event.ActionListener() {
@@ -67,8 +97,18 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
         });
 
         btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
 
         btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -128,7 +168,7 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblCadastrados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -136,7 +176,12 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
                 "ID", "CNPJ", "Razão Social", "E-mail", "Telefone"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tblCadastrados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblCadastradosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblCadastrados);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -174,7 +219,62 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
         
         FornecedorDAO dao = new FornecedorDAO();
         dao.create(f);
+        limpar();
+        preencherTabela();
     }//GEN-LAST:event_btnCadastrarActionPerformed
+
+    private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
+        // TODO add your handling code here:
+        limpar();
+    }//GEN-LAST:event_btnLimparActionPerformed
+
+    private void tblCadastradosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCadastradosMouseClicked
+        // TODO add your handling code here:
+        txtCnpj.setText(tblCadastrados.getValueAt(tblCadastrados.getSelectedRow(), 1).toString());
+        txtRazaoSocial.setText(tblCadastrados.getValueAt(tblCadastrados.getSelectedRow(), 2).toString());
+        txtEmail.setText(tblCadastrados.getValueAt(tblCadastrados.getSelectedRow(), 3).toString());
+        txtTelefone.setText(tblCadastrados.getValueAt(tblCadastrados.getSelectedRow(), 4).toString());
+    }//GEN-LAST:event_tblCadastradosMouseClicked
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        // TODO add your handling code here:
+        boolean clickOn = tblCadastrados.getSelectedRow() != 1;
+         
+        if(clickOn){
+            Fornecedor f = new Fornecedor();
+            f.setCnpj(txtCnpj.getText());
+            f.setRazaoSocial(txtRazaoSocial.getText());
+            f.setEmail(txtEmail.getText());
+            f.setTelefone(txtTelefone.getText());
+            f.setId(Integer.parseInt(tblCadastrados.getValueAt(tblCadastrados.getSelectedRow(), 0).toString()));
+            
+            FornecedorDAO dao = new FornecedorDAO();
+            dao.update(f);
+            limpar();
+            preencherTabela();
+        }
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        // TODO add your handling code here:
+        boolean clickOn = tblCadastrados.getSelectedRow() != 1;
+         
+        if(clickOn){
+            Fornecedor f = new Fornecedor();
+            f.setId(Integer.parseInt(tblCadastrados.getValueAt(tblCadastrados.getSelectedRow(), 0).toString()));
+            
+            FornecedorDAO dao = new FornecedorDAO();
+            int resposta = JOptionPane.showConfirmDialog(null, "Tem Certeza que deseja excluir o fornecedor");
+            
+            boolean afirmativa = resposta == JOptionPane.YES_OPTION;
+            
+            if(afirmativa){
+                dao.delete(f);
+                limpar();
+                preencherTabela();
+            }
+        }
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -188,7 +288,7 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblCadastrados;
     private javax.swing.JTextField txtCnpj;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtRazaoSocial;
