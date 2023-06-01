@@ -258,6 +258,7 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         // TODO add your handling code here:
         boolean clickOn = tblCadastrados.getSelectedRow() != 1;
+        
          
         if(clickOn){
             Fornecedor f = new Fornecedor();
@@ -265,7 +266,6 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
             
             FornecedorDAO dao = new FornecedorDAO();
             int resposta = JOptionPane.showConfirmDialog(null, "Tem Certeza que deseja excluir o fornecedor");
-            
             boolean afirmativa = resposta == JOptionPane.YES_OPTION;
             
             if(afirmativa){
