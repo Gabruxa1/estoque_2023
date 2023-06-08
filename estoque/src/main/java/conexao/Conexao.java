@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -22,7 +23,7 @@ public class Conexao {
         try {
             return DriverManager.getConnection(URL, USUARIO, SENHA);
         } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro: " + ex);
             throw new RuntimeException("erro na conexão com o BD");
         } 
     }

@@ -1,50 +1,63 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package views;
 
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import model.bean.Fornecedor;
-import model.dao.FornecedorDAO;
+import model.bean.Produto;
+import model.bean.TipoProduto;
+import model.dao.ProdutoDAO;
+import model.dao.TipoProdutoDAO;
 
-/**
- *
- * @author Aluno
- */
-public class TelaFornecedor extends javax.swing.JInternalFrame {
+public class TelaProduto extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form TelaFornecedor
-     */
-    public TelaFornecedor() {
+    public TelaProduto() {
         initComponents();
+        preencherCmbTipoProduto();
         preencherTabela();
     }
-    
+
     public void limpar() {
-        txtCnpj.setText("");
-        txtEmail.setText("");
-        txtRazaoSocial.setText("");
-        txtTelefone.setText("");
+        txtDescricao.setText("");
+        txtQuantidade.setText("");
+        txtValorUnitario.setText("");
+        cmbTipoProduto.setSelectedIndex(0);
     }
-    
+
     public void preencherTabela() {
         DefaultTableModel dtm = (DefaultTableModel) tblCadastrados.getModel();
-        FornecedorDAO dao = new FornecedorDAO();
-        
         dtm.setRowCount(0);
-        for(Fornecedor f : dao.read()) {
-            dtm.addRow(new Object[] {
-                f.getId(),
-                f.getCnpj(),
-                f.getRazaoSocial(),
-                f.getEmail(),
-                f.getTelefone()
+        ProdutoDAO dao = new ProdutoDAO();
+
+        for (Produto p : dao.read()) {
+            dtm.addRow(new Object[]{
+                p.getId(),
+                p.getDescricao(),
+                p.getValorUnitario(),
+                p.getQuantidade(),
+                p.getTipoProduto()
             });
         }
+    }
+
+    public void preencherCmbTipoProduto() {
+        TipoProdutoDAO dao = new TipoProdutoDAO();
+
+        for (TipoProduto tp : dao.read()) {
+            cmbTipoProduto.addItem(tp);
+        }
+    }
+
+    public Produto cadProduto() {
+        Produto p = new Produto();
+
+        p.setDescricao(txtDescricao.getText());
+        p.setValorUnitario(Double.parseDouble(txtValorUnitario.getText()));
+        p.setQuantidade(Integer.parseInt(txtQuantidade.getText()));
+        p.setTipoProduto((TipoProduto) cmbTipoProduto.getSelectedItem());
+
+        if (tblCadastrados.getSelectedRow() != -1) {
+            p.setId(Integer.parseInt(tblCadastrados.getValueAt(tblCadastrados.getSelectedRow(), 0).toString()));
+        }
+
+        return p;
     }
 
     /**
@@ -58,34 +71,35 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        txtCnpj = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        txtRazaoSocial = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        txtEmail = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        txtTelefone = new javax.swing.JTextField();
+        txtDescricao = new javax.swing.JTextField();
+        txtValorUnitario = new javax.swing.JTextField();
+        txtQuantidade = new javax.swing.JTextField();
         btnLimpar = new javax.swing.JButton();
         btnCadastrar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
+        cmbTipoProduto = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCadastrados = new javax.swing.JTable();
 
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
-        setTitle("Gerenciar Fornecedor");
+        setResizable(true);
+        setTitle("Gerenciar Produto");
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Cadastrar Fornecedor"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Cadastrar Produto"));
 
-        jLabel1.setText("CNPJ");
+        jLabel1.setText("Descrição");
 
-        jLabel2.setText("Razão Social");
+        jLabel2.setText("Valor Unitário");
 
-        jLabel3.setText("E-mail");
+        jLabel3.setText("Quantidade");
 
-        jLabel4.setText("Telefone");
+        jLabel4.setText("Tipo de Produto");
 
         btnLimpar.setText("Limpar");
         btnLimpar.addActionListener(new java.awt.event.ActionListener() {
@@ -109,11 +123,6 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
         });
 
         btnExcluir.setText("Excluir");
-        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExcluirActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -130,12 +139,12 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtCnpj)
-                            .addComponent(txtRazaoSocial)
-                            .addComponent(txtEmail)
-                            .addComponent(txtTelefone)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                            .addComponent(txtDescricao)
+                            .addComponent(txtValorUnitario)
+                            .addComponent(txtQuantidade)
+                            .addComponent(cmbTipoProduto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 163, Short.MAX_VALUE)
                         .addComponent(btnLimpar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCadastrar)
@@ -151,20 +160,20 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txtCnpj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(txtRazaoSocial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtValorUnitario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbTipoProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLimpar)
                     .addComponent(btnCadastrar)
@@ -178,7 +187,7 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "ID", "CNPJ", "Razão Social", "E-mail", "Telefone"
+                "ID", "Produto", "Valor", "Quantidade", "Tipo de Produto"
             }
         ));
         tblCadastrados.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -196,9 +205,7 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -207,78 +214,52 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        // TODO add your handling code here:
-        Fornecedor f = new Fornecedor();
-        f.setCnpj(txtCnpj.getText());
-        f.setRazaoSocial(txtRazaoSocial.getText());
-        f.setEmail(txtEmail.getText());
-        f.setTelefone(txtTelefone.getText());
-        
-        FornecedorDAO dao = new FornecedorDAO();
-        dao.create(f);
-        
-        limpar();
-        preencherTabela();
-    }//GEN-LAST:event_btnCadastrarActionPerformed
-
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
         // TODO add your handling code here:
         limpar();
+        preencherTabela();
     }//GEN-LAST:event_btnLimparActionPerformed
+
+    private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        // TODO add your handling code here:
+        ProdutoDAO dao = new ProdutoDAO();
+        dao.create(cadProduto());
+    }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void tblCadastradosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCadastradosMouseClicked
         // TODO add your handling code here:
-        txtCnpj.setText(tblCadastrados.getValueAt(tblCadastrados.getSelectedRow(), 1).toString());
-        txtRazaoSocial.setText(tblCadastrados.getValueAt(tblCadastrados.getSelectedRow(), 2).toString());
-        txtEmail.setText(tblCadastrados.getValueAt(tblCadastrados.getSelectedRow(), 3).toString());
-        txtTelefone.setText(tblCadastrados.getValueAt(tblCadastrados.getSelectedRow(), 4).toString());
+        ProdutoDAO dao = new ProdutoDAO();
+        Produto p = null;
+        p = dao.find(Integer.parseInt(tblCadastrados.getValueAt(tblCadastrados.getSelectedRow(), 0).toString()));
+
+        txtDescricao.setText(p.getDescricao());
+        txtValorUnitario.setText(String.valueOf(p.getValorUnitario()));
+        txtQuantidade.setText(String.valueOf(p.getValorUnitario()));
+
+        for (int i = 0; i < cmbTipoProduto.getItemCount(); i++) {
+            if (cmbTipoProduto.getItemAt(i).getId() == p.getTipoProduto().getId()) {
+                cmbTipoProduto.setSelectedIndex(i);
+            }
+        }
     }//GEN-LAST:event_tblCadastradosMouseClicked
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         // TODO add your handling code here:
-        if(tblCadastrados.getSelectedRow() != -1) {
-            Fornecedor f = new Fornecedor();
-            f.setCnpj(txtCnpj.getText());
-            f.setRazaoSocial(txtRazaoSocial.getText());
-            f.setEmail(txtEmail.getText());
-            f.setTelefone(txtTelefone.getText());
-            f.setId(Integer.parseInt(tblCadastrados.getValueAt(tblCadastrados.getSelectedRow(), 0).toString()));
-            
-            FornecedorDAO dao = new FornecedorDAO();
-            dao.update(f);
-            
+        ProdutoDAO dao = new ProdutoDAO();
+
+        if (tblCadastrados.getSelectedRow() != 1) {
+            dao.update(cadProduto());
             limpar();
             preencherTabela();
         }
-        
-        
-        
     }//GEN-LAST:event_btnEditarActionPerformed
-
-    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        // TODO add your handling code here:
-        if(tblCadastrados.getSelectedRow() != -1) {
-            Fornecedor f = new Fornecedor();
-            f.setId(Integer.parseInt(tblCadastrados.getValueAt(tblCadastrados.getSelectedRow(), 0).toString()));
-            
-            FornecedorDAO dao = new FornecedorDAO();
-            int resposta = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja excluir o fornecedor?");
-            
-            if (resposta == JOptionPane.YES_OPTION) {
-                dao.delete(f);
-                limpar();
-                preencherTabela();
-            }
-        }
-    }//GEN-LAST:event_btnExcluirActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -286,6 +267,7 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnLimpar;
+    private javax.swing.JComboBox<TipoProduto> cmbTipoProduto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -293,9 +275,8 @@ public class TelaFornecedor extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblCadastrados;
-    private javax.swing.JTextField txtCnpj;
-    private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtRazaoSocial;
-    private javax.swing.JTextField txtTelefone;
+    private javax.swing.JTextField txtDescricao;
+    private javax.swing.JTextField txtQuantidade;
+    private javax.swing.JTextField txtValorUnitario;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package model.dao;
 
 import conexao.Conexao;
@@ -11,14 +16,18 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.bean.Fornecedor;
 
-
+/**
+ *
+ * @author Aluno
+ */
 public class FornecedorDAO {
     public void create(Fornecedor f) {
         Connection con = Conexao.getConexao();
         PreparedStatement stmt = null;
         
         try {
-            String sql = "INSERT INTO fornecedor(cnpj, razao_social,email,telefone)" + "VALUES (?,?,?,?)";
+            String sql = "INSERT INTO fornecedor(cnpj,razao_social,email,telefone) "
+                    + "VALUES (?,?,?,?)";
             stmt = con.prepareStatement(sql);
             stmt.setString(1, f.getCnpj());
             stmt.setString(2, f.getRazaoSocial());
@@ -26,14 +35,14 @@ public class FornecedorDAO {
             stmt.setString(4, f.getTelefone());
             
             stmt.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Fornecedor adastrado com sucesso");
+            
+            JOptionPane.showMessageDialog(null, "Fornecedor cadastrado com sucesso!");
             
         } catch (SQLException ex) {
             Logger.getLogger(FornecedorDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             Conexao.fecharConexao(con, stmt);
         }
-        
     }
     
     public ArrayList<Fornecedor> read() {
@@ -58,25 +67,24 @@ public class FornecedorDAO {
                 fornecedores.add(f);
             }
             
-        } catch (SQLException ex){
-            JOptionPane.showMessageDialog(null, "Falha ao consultar");
-           
-        } finally{
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Falha ao consultar fornecedores");
+            Logger.getLogger(FornecedorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
             Conexao.fecharConexao(con, stmt, rs);
         }
         
         return fornecedores;
     }
     
-    public void update(Fornecedor f){
+    public void update(Fornecedor f) {
         Connection con = Conexao.getConexao();
         PreparedStatement stmt = null;
         
-        try{
-            String sql = "UPDATE fornecedor " + 
-                        "SET cnpj = ?, razao_social = ?, email = ?, telefone = ? "+
-                        "WHERE id_fornecedor = ?";
-            
+        try {
+            String sql = "UPDATE fornecedor "
+                    + "SET cnpj = ?, razao_social = ?, email = ?, telefone = ? "
+                    + "WHERE id_fornecedor = ?";
             stmt = con.prepareStatement(sql);
             stmt.setString(1, f.getCnpj());
             stmt.setString(2, f.getRazaoSocial());
@@ -85,27 +93,26 @@ public class FornecedorDAO {
             stmt.setInt(5, f.getId());
             
             stmt.executeUpdate();
-            JOptionPane.showMessageDialog(null,"Fornecedor atualizado com sucesso!");
+            JOptionPane.showMessageDialog(null, "Fornecedor atualizado com sucesso!");
             
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Falha ao atualizar fornecedor. Erro: " + ex);
         }
     }
     
-    public void delete(Fornecedor f){
+    public void delete(Fornecedor f) {
         Connection con = Conexao.getConexao();
         PreparedStatement stmt = null;
         
-        try{
+        try {
             String sql = "DELETE FROM fornecedor WHERE id_fornecedor = ?";
-            
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, f.getId());
             
             stmt.executeUpdate();
-            JOptionPane.showMessageDialog(null,"Fornecedor excluído com sucesso!");
+            JOptionPane.showMessageDialog(null, "Fornecedor excluído com sucesso!");
             
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Falha ao excluir fornecedor. Erro: " + ex);
         }
     }
