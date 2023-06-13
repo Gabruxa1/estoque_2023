@@ -84,8 +84,8 @@ public class ProdutoDAO {
                 p = new Produto();
                 p.setId(rs.getInt("id_produto"));
                 p.setDescricao(rs.getString("descricao"));
-                p.setDescricao(rs.getString("valor_unitario"));
-                p.setDescricao(rs.getString("quantidade"));
+                p.setValorUnitario(rs.getDouble("valor_unitario"));
+                p.setQuantidade(rs.getInt("quantidade"));
                 p.setTipoProduto(new TipoProdutoDAO().find(rs.getInt("id_tipo_produto")));
              
             }
