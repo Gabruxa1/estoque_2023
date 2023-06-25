@@ -77,6 +77,37 @@ public class FornecedorDAO {
         return fornecedores;
     }
     
+    public Fornecedor find(int id) {
+        Connection con = Conexao.getConexao();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Fornecedor f = null;
+        
+        try {
+            String sql = "SELECT * FROM fornecedor WHERE id_fornecedor = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            
+            if(rs.next()) {
+                f = new Fornecedor();
+                
+                f.setId(rs.getInt("id_fornecedor"));
+                f.setRazaoSocial(rs.getString("razao_social"));
+                f.setCnpj(rs.getString("cnpj"));
+                f.setEmail(rs.getString("email"));
+                f.setTelefone(rs.getString("telefone"));
+            }
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Falha ao consultar Fornecedores. Erro: " + ex);
+        } finally {
+            Conexao.fecharConexao(con, stmt, rs);
+        }
+        
+        return f;
+    }
+    
     public void update(Fornecedor f) {
         Connection con = Conexao.getConexao();
         PreparedStatement stmt = null;

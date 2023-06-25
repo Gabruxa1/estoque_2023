@@ -33,6 +33,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         menuFornecedores = new javax.swing.JMenuItem();
         menuProdutos = new javax.swing.JMenuItem();
+        menuCompras = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,6 +69,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
         });
         jMenu2.add(menuProdutos);
 
+        menuCompras.setText("Compras");
+        menuCompras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuComprasActionPerformed(evt);
+            }
+        });
+        jMenu2.add(menuCompras);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -98,6 +107,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
         TelaProduto tela = new TelaProduto();
         painelPrincipal.add(tela).setVisible(true);
     }//GEN-LAST:event_menuProdutosActionPerformed
+
+    private void menuComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuComprasActionPerformed
+        // TODO add your handling code here:
+        TelaCompra tela = new TelaCompra();
+        painelPrincipal.add(tela).setVisible(true);
+    }//GEN-LAST:event_menuComprasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -138,6 +153,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem menuCompras;
     private javax.swing.JMenuItem menuFornecedores;
     private javax.swing.JMenuItem menuProdutos;
     private javax.swing.JDesktopPane painelPrincipal;
